@@ -1,40 +1,44 @@
 const TelegramBot = require('node-telegram-bot-api');
 const bot = new TelegramBot('8665990996:AAFvQ6PRiZI0NqyjvJJjV06pvos7jehhI8o', { polling: true });
 
-// 1. Hàm xử lý tra cứu rút tiền dùng chung
-async function handleWithdrawVerification(chatId, withdrawId) {
-    // Giả lập hiển thị tin nhắn phản hồi
-    await bot.sendMessage(chatId, `⏳ Đang xác thực mã giao dịch: *${withdrawId}*...`, { parse_mode: 'Markdown' });
+// 1. Hàm xử lý logic tra cứu ID (Dùng chung cho cả 2 cách)
+async function processWithdraw(chatId, withdrawId) {
+    // Trả tin nhắn xác nhận cho người dùng
+    await bot.sendMessage(chatId, `⏳ Đang kiểm tra mã giao dịch: *${withdrawId}*...`, { parse_mode: 'Markdown' });
 
-    // TODO: Đặt logic gọi API tra cứu dữ liệu thực tế tại đây
+    // TODO: Đặt đoạn code gọi API kiểm tra dữ liệu rút tiền của bạn ở đây
 }
 
-// 2. Lắng nghe khi người dùng gõ lệnh trực tiếp: /xt <WithdrawalID>
+// 2. Lắng nghe khi người dùng gõ trực tiếp: /xt <WithdrawalID>
 bot.onText(/\/xt(?:\s+(.+))?/, async (msg, match) => {
     const chatId = msg.chat.id;
     const withdrawId = match[1] ? match[1].trim() : null;
 
     if (withdrawId) {
-        await handleWithdrawVerification(chatId, withdrawId);
+        await processWithdraw(chatId, withdrawId);
     } else {
-        bot.sendMessage(chatId, "Cú pháp: `/xt <WithdrawalID>`\nVí dụ: `/xt W2026082800883505`", { parse_mode: 'Markdown' });
+        await bot.sendMessage(chatId, "Cú pháp: `/xt <WithdrawalID>`\nVí dụ: `/xt W2026082800883505`", { parse_mode: 'Markdown' });
     }
 });
 
-// 3. Lắng nghe dữ liệu gửi từ Web App (Nút Menu -> Nhập ID -> Xác Nhận)
+// 3. LẮNG NGHE DỮ LIỆU TỪ WEB APP (QUAN TRỌNG NHẤT)
 bot.on('message', async (msg) => {
+    // Kiểm tra nếu tin nhắn đến từ việc nhấn nút "Xác Nhận" trên Web App
     if (msg.web_app_data) {
         try {
             const data = JSON.parse(msg.web_app_data.data);
+            
             if (data.action === 'xt' && data.withdraw_id) {
-                // Tự động hiển thị lại tin nhắn giả lập người dùng vừa gửi lệnh
-                await bot.sendMessage(msg.chat.id, `/xt ${data.withdraw_id}`);
-                
-                // Gọi hàm kiểm tra ID
-                await handleWithdrawVerification(msg.chat.id, data.withdraw_id);
+                const withdrawId = data.withdraw_id;
+
+                // Tự động hiển thị dòng lệnh /xt <ID> vào khung chat để giả lập hành vi
+                await bot.sendMessage(msg.chat.id, `/xt ${withdrawId}`);
+
+                // Gọi hàm xử lý tra cứu
+                await processWithdraw(msg.chat.id, withdrawId);
             }
-        } catch (e) {
-            console.error("Lỗi đọc dữ liệu WebApp:", e);
+        } catch (error) {
+            console.error("Lỗi đọc dữ liệu WebApp:", error);
         }
     }
 });
