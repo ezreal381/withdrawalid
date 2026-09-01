@@ -40,19 +40,15 @@
     </style>
 </head>
 <body>
-
     <div class="card">
         <h2>Xác Thực Rút Tiền</h2>
         <p>Nhập mã giao dịch để tiến hành kiểm tra trạng thái</p>
-
         <div class="input-group">
             <label for="withdrawId">Withdrawal ID</label>
             <input type="text" id="withdrawId" placeholder="Ví dụ: W2026082800883505" autocomplete="off" />
         </div>
-
         <button onclick="submitData()">Xác Nhận</button>
     </div>
-
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
@@ -60,14 +56,12 @@
 
         function submitData() {
             const withdrawId = document.getElementById('withdrawId').value.trim();
-
             if (!withdrawId) {
                 tg.showAlert("Vui lòng nhập Withdrawal ID!");
                 return;
             }
-
-            // Gửi dữ liệu trực tiếp về cho Bot
-            tg.sendData(withdrawId);
+            // Gửi dạng /xt ID
+            tg.sendData("/xt " + withdrawId);
             tg.close();
         }
     </script>
