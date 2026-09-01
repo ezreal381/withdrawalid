@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác Thực Rút Tiền</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: var(--tg-theme-bg-color, #ffffff);
+            --text-color: var(--tg-theme-text-color, #222222);
+            --btn-color: var(--tg-theme-button-color, #2481cc);
+            --btn-text-color: var(--tg-theme-button-text-color, #ffffff);
+            --hint-color: var(--tg-theme-hint-color, #999999);
+            --secondary-bg: var(--tg-theme-secondary-bg-color, #f4f4f5);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 90vh;
+            box-sizing: border-box;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 8px;
+            font-size: 20px;
+        }
+
+        p {
+            font-size: 14px;
+            color: var(--hint-color);
+            margin-top: 0;
+            margin-bottom: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--hint-color);
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 10px;
+            background-color: var(--secondary-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--btn-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--btn-text-color);
+            background-color: var(--btn-color);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:active {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>Xác Thực Rút Tiền</h2>
+        <p>Nhập mã giao dịch để tiến hành kiểm tra trạng thái</p>
+
+        <div class="input-group">
+            <label for="withdrawId">Withdrawal ID</label>
+            <input type="text" id="withdrawId" placeholder="Ví dụ: W2026082800883505" autocomplete="off" />
+        </div>
+
+        <button onclick="submitData()">Xác Nhận</button>
+    </div>
+
+    <script>
+        // Khởi tạo Telegram WebApp SDK
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Mở rộng tối đa màn hình
+
+        function submitData() {
+            const withdrawId = document.getElementById('withdrawId').value.trim();
+
+            if (!withdrawId) {
+                tg.showAlert("Vui lòng nhập Withdrawal ID!");
+                return;
+            }
+
+            // Gửi dữ liệu về lại cho Bot thông qua sự kiện sendData
+            tg.sendData(JSON.stringify({
+                action: 'verify_withdrawal',
+                withdraw_id: withdrawId
+            }));
+
+            // Đóng Web App sau khi gửi thành công
+            tg.close();
+        }
+    </script>
+</body>
+</html>
