@@ -14,12 +14,21 @@
             --hint-color: var(--tg-theme-hint-color, #999999);
             --secondary-bg: var(--tg-theme-secondary-bg-color, #f4f4f5);
         }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color); color: var(--text-color);
-            margin: 0; padding: 20px; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; min-height: 90vh; box-sizing: border-box;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 90vh;
+            box-sizing: border-box;
         }
+
         .card { width: 100%; max-width: 360px; text-align: center; }
         h2 { margin-bottom: 8px; font-size: 20px; }
         p { font-size: 14px; color: var(--hint-color); margin-top: 0; margin-bottom: 24px; }
@@ -66,13 +75,8 @@
                 return;
             }
 
-            // Gửi dữ liệu về Server qua API chính thức
-            tg.sendData(JSON.stringify({
-                action: 'xt',
-                withdraw_id: withdrawId
-            }));
-
-            tg.close();
+            // Tự động chèn câu lệnh /xt <ID> vào ô gõ tin nhắn của Telegram
+            tg.switchInlineQuery(`xt ${withdrawId}`, ['users', 'bots']);
         }
     </script>
 </body>
