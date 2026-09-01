@@ -6,12 +6,12 @@ from aiogram.filters import CommandStart
 from aiogram.enums import ParseMode
 
 # ================== CẤU HÌNH ==================
-BOT_TOKEN = "8665990996:AAFvQ6PRiZI0NqyjvJJjV06pvos7jehhI8o"  # Lấy từ @BotFather
+BOT_TOKEN2 = "8665990996:AAFvQ6PRiZI0NqyjvJJjV06pvos7jehhI8o"  # Lấy từ @BotFather
 WEBAPP_URL = "https://ezreal381.github.io/withdrawalid/"  # Link WebApp của bạn (hoặc link GitHub Pages)
 
 # ================== KHỞI TẠO ==================
 logging.basicConfig(level=logging.INFO)
-bot = Bot(token=BOT_TOKEN)
+bot = Bot(token=BOT_TOKEN2)
 dp = Dispatcher()
 
 # ================== KEYBOARD ==================
