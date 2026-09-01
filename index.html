@@ -110,8 +110,9 @@
         <button onclick="submitData()">Xác Nhận</button>
     </div>
 
-   <script>
+  <script>
     const tg = window.Telegram.WebApp;
+    tg.ready();
     tg.expand();
 
     function submitData() {
@@ -122,16 +123,8 @@
             return;
         }
 
-        // Mở lại khung chat với bot kèm sẵn câu lệnh /xt <ID>
-        tg.switchInlineQuery(`xt ${withdrawId}`, ['users', 'bots', 'groups', 'channels']);
-        
-        // Hoặc nếu muốn gửi thẳng lệnh trong chat riêng với bot:
-        // Bot backend cần lắng nghe và gửi tin nhắn phản hồi khi nhận web_app_data
-        tg.sendData(JSON.stringify({
-            command: `/xt ${withdrawId}`
-        }));
-
-        tg.close();
+        // Chèn trực tiếp lệnh /xt <ID> vào ô chat
+        tg.switchInlineQuery(`xt ${withdrawId}`, ['users']);
     }
 </script>
 </body>
