@@ -29,71 +29,24 @@
             box-sizing: border-box;
         }
 
-        .card {
-            width: 100%;
-            max-width: 360px;
-            text-align: center;
-        }
-
-        h2 {
-            margin-bottom: 8px;
-            font-size: 20px;
-        }
-
-        p {
-            font-size: 14px;
-            color: var(--hint-color);
-            margin-top: 0;
-            margin-bottom: 24px;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--hint-color);
-            text-transform: uppercase;
-        }
-
+        .card { width: 100%; max-width: 360px; text-align: center; }
+        h2 { margin-bottom: 8px; font-size: 20px; }
+        p { font-size: 14px; color: var(--hint-color); margin-top: 0; margin-bottom: 24px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: var(--hint-color); text-transform: uppercase; }
         input {
-            width: 100%;
-            padding: 14px;
-            font-size: 16px;
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 10px;
-            background-color: var(--secondary-bg);
-            color: var(--text-color);
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color 0.2s;
+            width: 100%; padding: 14px; font-size: 16px;
+            border: 1px solid rgba(0,0,0,0.1); border-radius: 10px;
+            background-color: var(--secondary-bg); color: var(--text-color);
+            box-sizing: border-box; outline: none;
         }
-
-        input:focus {
-            border-color: var(--btn-color);
-        }
-
+        input:focus { border-color: var(--btn-color); }
         button {
-            width: 100%;
-            padding: 14px;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--btn-text-color);
-            background-color: var(--btn-color);
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: opacity 0.2s;
+            width: 100%; padding: 14px; font-size: 16px; font-weight: 600;
+            color: var(--btn-text-color); background-color: var(--btn-color);
+            border: none; border-radius: 10px; cursor: pointer;
         }
-
-        button:active {
-            opacity: 0.8;
-        }
+        button:active { opacity: 0.8; }
     </style>
 </head>
 <body>
@@ -110,47 +63,27 @@
         <button onclick="submitData()">Xác Nhận</button>
     </div>
 
-<script>
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-    tg.expand();
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
 
-    // Điền TOKEN BOT của bạn vào đây
-    const BOT_TOKEN = '8665990996:AAFvQ6PRiZI0NqyjvJJjV06pvos7jehhI8o';
+        function submitData() {
+            const withdrawId = document.getElementById('withdrawId').value.trim();
 
-    async function submitData() {
-        const withdrawId = document.getElementById('withdrawId').value.trim();
+            if (!withdrawId) {
+                tg.showAlert("Vui lòng nhập Withdrawal ID!");
+                return;
+            }
 
-        if (!withdrawId) {
-            tg.showAlert("Vui lòng nhập Withdrawal ID!");
-            return;
-        }
-
-        // Lấy ID người dùng từ SDK Telegram
-        const chatId = tg.initDataUnsafe?.user?.id;
-
-        if (!chatId) {
-            tg.showAlert("Không lấy được thông tin người dùng Telegram!");
-            return;
-        }
-
-        try {
-            // Gửi thẳng tin nhắn vào chat thông qua Telegram Bot API
-            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: `/xt ${withdrawId}`
-                })
-            });
+            // Gửi dữ liệu về cho Bot Server xử lý
+            tg.sendData(JSON.stringify({
+                action: 'xt',
+                withdraw_id: withdrawId
+            }));
 
             tg.close();
-        } catch (error) {
-            tg.showAlert("Có lỗi xảy ra, vui lòng thử lại!");
         }
-    }
-</script>
-    
+    </script>
 </body>
 </html>
