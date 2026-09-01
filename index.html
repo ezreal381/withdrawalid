@@ -110,7 +110,7 @@
         <button onclick="submitData()">Xác Nhận</button>
     </div>
 
-  <script>
+<script>
     const tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
@@ -123,9 +123,17 @@
             return;
         }
 
-        // Chèn trực tiếp lệnh /xt <ID> vào ô chat
-        tg.switchInlineQuery(`xt ${withdrawId}`, ['users']);
+        // Gửi dữ liệu sạch về cho Bot Backend
+        tg.sendData(JSON.stringify({
+            action: 'xt',
+            withdraw_id: withdrawId
+        }));
+
+        // Đóng Web App ngay sau khi gửi
+        tg.close();
     }
 </script>
+
+    
 </body>
 </html>
