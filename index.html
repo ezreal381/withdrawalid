@@ -17,16 +17,9 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 90vh;
-            box-sizing: border-box;
+            background-color: var(--bg-color); color: var(--text-color);
+            margin: 0; padding: 20px; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; min-height: 90vh; box-sizing: border-box;
         }
 
         .card { width: 100%; max-width: 360px; text-align: center; }
@@ -75,8 +68,13 @@
                 return;
             }
 
-            // Tự động chèn câu lệnh /xt <ID> vào ô gõ tin nhắn của Telegram
-            tg.switchInlineQuery(`xt ${withdrawId}`, ['users', 'bots']);
+            // Mở link t.me của bot kèm tham số start (Deep Linking)
+            // Lệnh này ép Telegram tự động gửi /start xt_ID vào khung chat
+            const botUsername = "xacthucruttien_bot";
+            const targetUrl = `https://t.me/${botUsername}?start=xt_${withdrawId}`;
+
+            tg.openTelegramLink(targetUrl);
+            tg.close();
         }
     </script>
 </body>
