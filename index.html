@@ -115,7 +115,10 @@
     tg.ready();
     tg.expand();
 
-    function submitData() {
+    // Điền TOKEN BOT của bạn vào đây
+    const BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE';
+
+    async function submitData() {
         const withdrawId = document.getElementById('withdrawId').value.trim();
 
         if (!withdrawId) {
@@ -123,17 +126,31 @@
             return;
         }
 
-        // Gửi dữ liệu sạch về cho Bot Backend
-        tg.sendData(JSON.stringify({
-            action: 'xt',
-            withdraw_id: withdrawId
-        }));
+        // Lấy ID người dùng từ SDK Telegram
+        const chatId = tg.initDataUnsafe?.user?.id;
 
-        // Đóng Web App ngay sau khi gửi
-        tg.close();
+        if (!chatId) {
+            tg.showAlert("Không lấy được thông tin người dùng Telegram!");
+            return;
+        }
+
+        try {
+            // Gửi thẳng tin nhắn vào chat thông qua Telegram Bot API
+            await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: `/xt ${withdrawId}`
+                })
+            });
+
+            tg.close();
+        } catch (error) {
+            tg.showAlert("Có lỗi xảy ra, vui lòng thử lại!");
+        }
     }
 </script>
-
     
 </body>
 </html>
