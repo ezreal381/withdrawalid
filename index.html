@@ -110,28 +110,29 @@
         <button onclick="submitData()">Xác Nhận</button>
     </div>
 
-    <script>
-        // Khởi tạo Telegram WebApp SDK
-        const tg = window.Telegram.WebApp;
-        tg.expand(); // Mở rộng tối đa màn hình
+   <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
 
-        function submitData() {
-            const withdrawId = document.getElementById('withdrawId').value.trim();
+    function submitData() {
+        const withdrawId = document.getElementById('withdrawId').value.trim();
 
-            if (!withdrawId) {
-                tg.showAlert("Vui lòng nhập Withdrawal ID!");
-                return;
-            }
-
-            // Gửi dữ liệu về lại cho Bot thông qua sự kiện sendData
-            tg.sendData(JSON.stringify({
-                action: 'verify_withdrawal',
-                withdraw_id: withdrawId
-            }));
-
-            // Đóng Web App sau khi gửi thành công
-            tg.close();
+        if (!withdrawId) {
+            tg.showAlert("Vui lòng nhập Withdrawal ID!");
+            return;
         }
-    </script>
+
+        // Mở lại khung chat với bot kèm sẵn câu lệnh /xt <ID>
+        tg.switchInlineQuery(`xt ${withdrawId}`, ['users', 'bots', 'groups', 'channels']);
+        
+        // Hoặc nếu muốn gửi thẳng lệnh trong chat riêng với bot:
+        // Bot backend cần lắng nghe và gửi tin nhắn phản hồi khi nhận web_app_data
+        tg.sendData(JSON.stringify({
+            command: `/xt ${withdrawId}`
+        }));
+
+        tg.close();
+    }
+</script>
 </body>
 </html>
