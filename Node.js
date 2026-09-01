@@ -1,5 +1,5 @@
 const TelegramBot = require('node-telegram-bot-api');
-const bot = new TelegramBot('YOUR_BOT_TOKEN', { polling: true });
+const bot = new TelegramBot('8665990996:AAFvQ6PRiZI0NqyjvJJjV06pvos7jehhI8o', { polling: true });
 
 // 1. Hàm xử lý tra cứu rút tiền dùng chung
 async function handleWithdrawVerification(chatId, withdrawId) {
